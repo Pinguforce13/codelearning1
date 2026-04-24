@@ -585,8 +585,8 @@ const lessons = [
       {
         type: "code",
         instruction: "Schrijf CSS in een <code>&lt;style&gt;</code> tag die de <code>h1</code> de kleur <code>blue</code> geeft.",
-        hint: "<style>\n  h1 {\n    color: blue;\n  }\n</style>",
-        check: (val) => val.includes("<style>") && val.includes("h1") && val.includes("color") && val.includes("blue"),
+        hint: "<sty" + "le>\n  h1 {\n    color: blue;\n  }\n<\/style>",
+        check: (val) => val.toLowerCase().includes("<style") && val.includes("h1") && val.includes("color") && val.includes("blue"),
         xp: 30
       },
       {
@@ -611,8 +611,8 @@ const lessons = [
       {
         type: "code",
         instruction: "Maak een <code>&lt;script&gt;</code> tag met daarin een variabele <code>naam</code> die jouw naam bevat, en gebruik <code>console.log(naam)</code> om het te tonen.",
-        hint: "<script>\n  let naam = \"jouw naam\";\n  console.log(naam);\n</script>",
-        check: (val) => val.includes("<script>") && val.includes("let") && val.includes("console.log"),
+        hint: "<scr" + "ipt>\n  let naam = \"jouw naam\";\n  console.log(naam);\n<\/script>",
+        check: (val) => val.toLowerCase().includes("<script") && val.includes("let") && val.includes("console.log"),
         xp: 35
       },
       {
