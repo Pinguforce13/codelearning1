@@ -3,866 +3,1313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a1a2e">
-<meta name="description" content="Leer coderen stap voor stap">
-<link rel="manifest" href="#" id="manifest-link">
-<title>CodeLeer — Leer zelf coderen</title>
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Leer coderen stap voor stap - van nul tot je eigen website">
+<title>CodeLeer 2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0f1a;
-    --surface: #1a1a2e;
-    --surface2: #16213e;
-    --accent: #e94560;
-    --accent2: #0f3460;
-    --text: #e8e8f0;
-    --text2: #9090b0;
-    --green: #00d4aa;
-    --yellow: #ffd700;
-    --border: rgba(255,255,255,0.08);
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Syne', sans-serif;
-  }
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface2: #16213e;
+  --accent: #e94560;
+  --text: #e8e8f0;
+  --text2: #9090b0;
+  --green: #00d4aa;
+  --yellow: #ffd700;
+  --blue: #4ea8ff;
+  --border: rgba(255,255,255,0.08);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* NAV */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.logo { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-right: auto; }
+.logo span { color: var(--accent); }
+.nav-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  transition: all 0.2s;
+}
+.nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.08); color: var(--text); }
+.nav-btn.active { border-color: var(--accent); color: var(--accent); }
+.xp-pill { font-family: var(--mono); font-size: 12px; color: var(--yellow); background: rgba(255,215,0,0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.2); }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
 
-  /* HEADER */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.5rem;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+/* ===================== HOME ===================== */
+.home-hero {
+  text-align: center;
+  padding: 4rem 2rem 2rem;
+}
+.home-hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+.home-hero h1 span { color: var(--accent); }
+.home-hero p { color: var(--text2); font-family: var(--mono); font-size: 14px; line-height: 1.8; max-width: 500px; margin: 0 auto 2rem; }
 
-  .logo {
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: var(--text);
-  }
-  .logo span { color: var(--accent); }
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1rem 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.chapter-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.chapter-card:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+.chapter-card.locked { opacity: 0.5; cursor: not-allowed; }
+.chapter-card.completed { border-color: rgba(0,212,170,0.4); }
+.chapter-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+.chapter-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
+.chapter-desc { font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; }
+.chapter-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+}
+.chapter-badge {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: var(--mono);
+}
+.badge-easy { background: rgba(0,212,170,0.15); color: var(--green); }
+.badge-medium { background: rgba(255,215,0,0.12); color: var(--yellow); }
+.badge-hard { background: rgba(233,69,96,0.12); color: var(--accent); }
+.chapter-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.05);
+}
+.chapter-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 0 0 14px 0;
+  transition: width 0.5s ease;
+}
+.lock-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
 
-  .progress-bar-wrapper {
-    flex: 1;
-    max-width: 200px;
-    margin: 0 1.5rem;
-  }
-  .progress-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; font-family: var(--mono); }
-  .progress-bar {
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
+/* ACHIEVEMENT STRIP */
+.achievements {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 2rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.achievement {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+.achievement.unlocked { border-color: rgba(255,215,0,0.3); color: var(--yellow); }
 
-  .xp-badge {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--yellow);
-    background: rgba(255,215,0,0.12);
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,215,0,0.25);
-  }
+/* ===================== LESSON PAGE ===================== */
+.lesson-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 56px);
+}
+.lesson-sidebar {
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  position: sticky;
+  top: 56px;
+  max-height: calc(100vh - 56px);
+}
+.ls-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); font-family: var(--mono); margin-bottom: 0.75rem; }
+.ls-back { font-family: var(--mono); font-size: 12px; color: var(--accent); cursor: pointer; margin-bottom: 1.5rem; display: block; }
+.ls-back:hover { text-decoration: underline; }
+.step-list { list-style: none; }
+.step-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text2);
+  font-family: var(--mono);
+  margin-bottom: 2px;
+  transition: all 0.2s;
+}
+.step-item:hover { background: rgba(255,255,255,0.05); }
+.step-item.active { background: rgba(233,69,96,0.12); color: var(--text); }
+.step-item.done { color: var(--green); }
+.step-dot2 { width: 18px; height: 18px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
 
-  /* LAYOUT */
-  .app {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    min-height: calc(100vh - 56px);
-  }
+.lesson-main { padding: 2rem; max-width: 820px; }
+.lesson-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.lesson-title-big { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
+.lesson-desc-sm { color: var(--text2); font-family: var(--mono); font-size: 13px; line-height: 1.6; margin-bottom: 2rem; }
 
-  /* SIDEBAR */
-  .sidebar {
-    background: var(--surface2);
-    border-right: 1px solid var(--border);
-    padding: 1.5rem 1rem;
-    overflow-y: auto;
-    max-height: calc(100vh - 56px);
-    position: sticky;
-    top: 56px;
-  }
+/* WHAT YOU LEARNED */
+.skill-unlock {
+  background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(78,168,255,0.08));
+  border: 1px solid rgba(0,212,170,0.25);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.skill-unlock h4 { font-size: 12px; color: var(--green); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.skill-tag {
+  background: rgba(0,212,170,0.12);
+  color: var(--green);
+  border: 1px solid rgba(0,212,170,0.25);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
 
-  .sidebar-section-title {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text2);
-    margin-bottom: 0.75rem;
-    font-family: var(--mono);
-  }
+/* CARDS */
+.theory-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.theory-card h3 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; font-family: var(--mono); }
+.theory-text { font-size: 14px; line-height: 1.9; color: var(--text); font-family: var(--mono); }
+.theory-text code { color: var(--yellow); background: rgba(255,215,0,0.1); padding: 1px 6px; border-radius: 4px; }
+.theory-text strong { color: var(--green); font-weight: 500; }
 
-  .lesson-list { list-style: none; margin-bottom: 2rem; }
+.code-block {
+  background: #08080f;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.kw { color: #c792ea; } .str { color: #c3e88d; } .tag { color: #f07178; }
+.attr { color: #ffcb6b; } .val { color: #c3e88d; } .cmt { color: #546e7a; font-style: italic; }
+.num { color: #f78c6c; } .fn { color: #82aaff; } .prop { color: #ffcb6b; }
 
-  .lesson-item {
-    padding: 0.6rem 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--text2);
-    transition: all 0.2s;
-    margin-bottom: 2px;
-    border: 1px solid transparent;
-  }
-  .lesson-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-  .lesson-item.active { background: rgba(233,69,96,0.15); color: var(--text); border-color: rgba(233,69,96,0.3); }
-  .lesson-item.done { color: var(--green); }
+/* EDITOR */
+.editor-wrap { margin-bottom: 1.25rem; }
+.editor-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: var(--mono); font-size: 12px; color: var(--text2); }
+.hint-btn { background: none; border: none; color: var(--accent); font-family: var(--mono); font-size: 11px; cursor: pointer; text-decoration: underline dotted; }
+.code-editor {
+  width: 100%;
+  background: #08080f;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.8;
+  padding: 1rem 1.25rem;
+  resize: vertical;
+  min-height: 130px;
+  outline: none;
+  transition: border-color 0.2s;
+  tab-size: 2;
+}
+.code-editor:focus { border-color: rgba(233,69,96,0.4); }
 
-  .lesson-icon {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.06);
-    font-family: var(--mono);
-    font-weight: 700;
-  }
-  .lesson-item.done .lesson-icon { background: rgba(0,212,170,0.2); color: var(--green); }
-  .lesson-item.active .lesson-icon { background: rgba(233,69,96,0.3); color: var(--accent); }
+/* PREVIEW */
+.preview-wrap { margin-bottom: 1.25rem; display: none; }
+.preview-label { font-family: var(--mono); font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.preview-frame { background: white; border: 1px solid var(--border); border-radius: 8px; min-height: 80px; padding: 1rem; font-family: sans-serif; color: #111; }
 
-  /* MAIN */
-  .main {
-    padding: 2rem;
-    max-width: 860px;
-  }
+/* FEEDBACK */
+.feedback { padding: 0.9rem 1.1rem; border-radius: 8px; font-family: var(--mono); font-size: 13px; line-height: 1.6; margin-bottom: 1rem; display: none; }
+.feedback.ok { background: rgba(0,212,170,0.08); border: 1px solid rgba(0,212,170,0.3); color: var(--green); display: block; }
+.feedback.err { background: rgba(233,69,96,0.08); border: 1px solid rgba(233,69,96,0.3); color: #ff8fa3; display: block; }
+.feedback.hint { background: rgba(255,215,0,0.07); border: 1px solid rgba(255,215,0,0.2); color: var(--yellow); display: block; }
 
-  /* LESSON HEADER */
-  .lesson-header {
-    margin-bottom: 2rem;
-  }
-  .lesson-tag {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-  }
-  .lesson-title {
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 0.5rem;
-  }
-  .lesson-desc {
-    color: var(--text2);
-    font-size: 15px;
-    line-height: 1.6;
-    font-family: var(--mono);
-  }
+/* BUTTONS */
+.btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.btn { padding: 0.55rem 1.1rem; border-radius: 8px; font-family: var(--mono); font-size: 13px; cursor: pointer; border: none; transition: all 0.15s; font-weight: 500; }
+.btn-p { background: var(--accent); color: white; }
+.btn-p:hover { background: #ff6b8a; transform: translateY(-1px); }
+.btn-s { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--border); }
+.btn-s:hover { background: rgba(255,255,255,0.1); }
+.btn-g { background: rgba(0,212,170,0.1); color: var(--green); border: 1px solid rgba(0,212,170,0.25); }
+.btn-g:hover { background: rgba(0,212,170,0.18); }
 
-  /* THEORY CARD */
-  .theory-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .theory-card h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
-    font-family: var(--mono);
-  }
-  .theory-text {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text);
-    font-family: var(--mono);
-  }
-  .theory-text code {
-    color: var(--yellow);
-    background: rgba(255,215,0,0.1);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-family: var(--mono);
-  }
-  .theory-text strong { color: var(--green); font-weight: 500; }
+/* QUIZ */
+.quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.quiz-opt { padding: 0.7rem 1rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-family: var(--mono); font-size: 13px; color: var(--text); transition: all 0.15s; text-align: left; }
+.quiz-opt:hover { background: rgba(255,255,255,0.08); }
+.quiz-opt.correct { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.4); color: var(--green); }
+.quiz-opt.wrong { background: rgba(233,69,96,0.1); border-color: rgba(233,69,96,0.4); color: #ff8fa3; }
 
-  /* EXAMPLE CODE */
-  .code-example {
-    background: #0a0a14;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 8px;
-    padding: 1.25rem 1.5rem;
-    margin: 1rem 0;
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.9;
-    white-space: pre-wrap;
-    overflow-x: auto;
-    color: #c8c8e8;
-  }
-  .kw { color: #c792ea; }
-  .str { color: #c3e88d; }
-  .tag { color: #f07178; }
-  .attr { color: #ffcb6b; }
-  .val { color: #c3e88d; }
-  .cmt { color: #546e7a; font-style: italic; }
-  .num { color: #f78c6c; }
-  .fn { color: #82aaff; }
+/* STEP DOTS */
+.step-dots { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+.sdot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.12); transition: all 0.2s; cursor: pointer; }
+.sdot.active { background: var(--accent); width: 22px; border-radius: 4px; }
+.sdot.done { background: var(--green); }
 
-  /* EDITOR AREA */
-  .editor-section {
-    margin-bottom: 1.5rem;
-  }
-  .editor-label {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text2);
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .editor-hint {
-    color: var(--accent);
-    font-size: 11px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-family: var(--mono);
-    color: var(--accent);
-    cursor: pointer;
-    text-decoration: underline dotted;
-  }
-  .editor-hint:hover { color: #ff6b8a; }
+/* COMPLETE BANNER */
+.complete-banner {
+  background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(78,168,255,0.08));
+  border: 1px solid rgba(0,212,170,0.3);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.complete-banner h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.complete-banner p { font-family: var(--mono); font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
 
-  .code-editor {
-    width: 100%;
-    background: #0a0a14;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.8;
-    padding: 1rem 1.25rem;
-    resize: vertical;
-    min-height: 140px;
-    outline: none;
-    transition: border-color 0.2s;
-    tab-size: 2;
-  }
-  .code-editor:focus { border-color: rgba(233,69,96,0.5); }
+/* ===================== SANDBOX ===================== */
+.sandbox-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(100vh - 56px);
+}
+.sandbox-editor-panel { display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+.sandbox-tabs { display: flex; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.stab { padding: 0.6rem 1.25rem; font-family: var(--mono); font-size: 12px; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; transition: all 0.2s; }
+.stab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.sandbox-textarea {
+  flex: 1;
+  background: #08080f;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.8;
+  padding: 1.25rem;
+  border: none;
+  resize: none;
+  outline: none;
+  display: none;
+  tab-size: 2;
+}
+.sandbox-textarea.active { display: block; }
+.sandbox-run { padding: 0.75rem 1.5rem; background: var(--accent); color: white; font-family: var(--mono); font-size: 13px; cursor: pointer; border: none; font-weight: 600; transition: background 0.2s; }
+.sandbox-run:hover { background: #ff6b8a; }
+.sandbox-preview-panel { display: flex; flex-direction: column; }
+.sandbox-preview-header { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.6rem 1.25rem; font-family: var(--mono); font-size: 12px; color: var(--text2); display: flex; align-items: center; justify-content: space-between; }
+.sandbox-iframe { flex: 1; border: none; background: white; }
+.sandbox-templates { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 0.75rem 1.25rem; background: var(--surface); border-bottom: 1px solid var(--border); }
+.s-template { padding: 3px 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; font-family: var(--mono); font-size: 11px; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+.s-template:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* PREVIEW */
-  .preview-section { margin-bottom: 1.5rem; }
-  .preview-frame {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    min-height: 100px;
-    padding: 1rem;
-    font-family: sans-serif;
-  }
+/* ===================== PORTFOLIO ===================== */
+.portfolio-page { padding: 2rem; max-width: 900px; margin: 0 auto; }
+.portfolio-header { text-align: center; padding: 2rem 0 3rem; }
+.portfolio-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.portfolio-header p { font-family: var(--mono); color: var(--text2); font-size: 13px; }
+.portfolio-site-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.portfolio-topbar { background: var(--surface2); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+.dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.dot-y { width: 10px; height: 10px; border-radius: 50%; background: #febc2e; }
+.dot-g { width: 10px; height: 10px; border-radius: 50%; background: #28c840; }
+.url-bar { flex: 1; background: rgba(255,255,255,0.05); border-radius: 6px; padding: 4px 12px; font-family: var(--mono); font-size: 12px; color: var(--text2); margin-left: 0.5rem; }
+.portfolio-frame { height: 400px; border: none; width: 100%; background: white; }
+.portfolio-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+.portfolio-section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.portfolio-section-card h3 { font-size: 14px; margin-bottom: 0.5rem; }
+.portfolio-section-card p { font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 0.75rem; }
+.portfolio-section-card.locked { opacity: 0.5; }
+.portfolio-section-card.locked::after { content: '🔒 Volg de lessen om dit te unlocken'; display: block; font-family: var(--mono); font-size: 11px; color: var(--text2); }
+.mini-editor { width: 100%; background: #08080f; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 12px; padding: 0.6rem 0.75rem; resize: vertical; min-height: 80px; outline: none; border-color: var(--border); }
+.mini-editor:focus { border-color: rgba(233,69,96,0.4); }
 
-  /* BUTTONS */
-  .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+/* TOAST */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--surface); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 0.7rem 1.1rem; font-family: var(--mono); font-size: 13px; color: var(--yellow); display: none; align-items: center; gap: 8px; z-index: 999; animation: slideUp 0.3s ease; }
+.toast.show { display: flex; }
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-  .btn {
-    padding: 0.6rem 1.25rem;
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
-  .btn-primary:hover { background: #ff6b8a; transform: translateY(-1px); }
-  .btn-secondary {
-    background: rgba(255,255,255,0.07);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-secondary:hover { background: rgba(255,255,255,0.12); }
-  .btn-green {
-    background: rgba(0,212,170,0.15);
-    color: var(--green);
-    border: 1px solid rgba(0,212,170,0.3);
-  }
-  .btn-green:hover { background: rgba(0,212,170,0.25); }
-
-  /* FEEDBACK */
-  .feedback {
-    padding: 1rem 1.25rem;
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    display: none;
-  }
-  .feedback.success {
-    background: rgba(0,212,170,0.1);
-    border: 1px solid rgba(0,212,170,0.3);
-    color: var(--green);
-    display: block;
-  }
-  .feedback.error {
-    background: rgba(233,69,96,0.1);
-    border: 1px solid rgba(233,69,96,0.3);
-    color: #ff8fa3;
-    display: block;
-  }
-  .feedback.hint {
-    background: rgba(255,215,0,0.08);
-    border: 1px solid rgba(255,215,0,0.2);
-    color: var(--yellow);
-    display: block;
-  }
-
-  /* QUIZ */
-  .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-  .quiz-option {
-    padding: 0.75rem 1rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text);
-    transition: all 0.2s;
-    text-align: left;
-  }
-  .quiz-option:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.15); }
-  .quiz-option.correct { background: rgba(0,212,170,0.12); border-color: rgba(0,212,170,0.4); color: var(--green); }
-  .quiz-option.wrong { background: rgba(233,69,96,0.12); border-color: rgba(233,69,96,0.4); color: #ff8fa3; }
-
-  /* STEP INDICATOR */
-  .step-indicator {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 1.5rem;
-  }
-  .step-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .step-dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
-  .step-dot.done { background: var(--green); }
-
-  /* XP TOAST */
-  .xp-toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: var(--surface);
-    border: 1px solid rgba(255,215,0,0.3);
-    border-radius: 12px;
-    padding: 0.75rem 1.25rem;
-    font-family: var(--mono);
-    font-size: 14px;
-    color: var(--yellow);
-    display: none;
-    align-items: center;
-    gap: 8px;
-    z-index: 999;
-    animation: slideUp 0.3s ease;
-  }
-  .xp-toast.show { display: flex; }
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    .app { grid-template-columns: 1fr; }
-    .sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
-    .main { padding: 1.25rem; }
-    .lesson-title { font-size: 1.5rem; }
-    .progress-bar-wrapper { display: none; }
-  }
+/* RESPONSIVE */
+@media (max-width: 750px) {
+  .lesson-layout { grid-template-columns: 1fr; }
+  .lesson-sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+  .sandbox-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+  .home-hero h1 { font-size: 2rem; }
+  .portfolio-sections { grid-template-columns: 1fr; }
+  nav .nav-btn span { display: none; }
+}
 </style>
 </head>
 <body>
 
-<header>
+<nav>
   <div class="logo">code<span>leer</span></div>
-  <div class="progress-bar-wrapper">
-    <div class="progress-label" id="progress-label">Les 1 van 6</div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:16%"></div></div>
+  <button class="nav-btn active" onclick="showPage('home')" id="nav-home">🏠 <span>Home</span></button>
+  <button class="nav-btn" onclick="showPage('lessons')" id="nav-lessons">📚 <span>Lessen</span></button>
+  <button class="nav-btn" onclick="showPage('sandbox')" id="nav-sandbox">⚡ <span>Speeltuin</span></button>
+  <button class="nav-btn" onclick="showPage('portfolio')" id="nav-portfolio">🌐 <span>Mijn Site</span></button>
+  <div class="xp-pill" id="xp-display">⚡ 0 XP</div>
+</nav>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <h1>Leer coderen.<br><span>Bouw je eigen site.</span></h1>
+    <p>Van absolute nul tot je eigen werkende website. Stap voor stap, rustig opgebouwd. Geen voorkennis nodig.</p>
   </div>
-  <div class="xp-badge" id="xp-display">⚡ 0 XP</div>
-</header>
 
-<div class="app">
-  <aside class="sidebar">
-    <div class="sidebar-section-title">📚 Lessen</div>
-    <ul class="lesson-list" id="lesson-list">
-      <li class="lesson-item active" data-lesson="0">
-        <div class="lesson-icon">1</div> Wat is HTML?
-      </li>
-      <li class="lesson-item" data-lesson="1">
-        <div class="lesson-icon">2</div> Je eerste tags
-      </li>
-      <li class="lesson-item" data-lesson="2">
-        <div class="lesson-icon">3</div> Koppen & tekst
-      </li>
-      <li class="lesson-item" data-lesson="3">
-        <div class="lesson-icon">4</div> Links & afbeeldingen
-      </li>
-      <li class="lesson-item" data-lesson="4">
-        <div class="lesson-icon">5</div> CSS: kleuren & stijlen
-      </li>
-      <li class="lesson-item" data-lesson="5">
-        <div class="lesson-icon">6</div> JavaScript basics
-      </li>
-    </ul>
-    <div class="sidebar-section-title">🏆 Jouw voortgang</div>
-    <div style="font-family: var(--mono); font-size: 12px; color: var(--text2); line-height: 2;">
-      <div>Lessen klaar: <span id="done-count" style="color: var(--green);">0</span>/6</div>
-      <div>XP verdiend: <span id="xp-sidebar" style="color: var(--yellow);">0</span></div>
-      <div style="margin-top: 0.5rem; color: var(--text2); font-size: 11px;">Schrijf de code zelf —<br>niet kopiëren! 💪</div>
+  <div style="padding: 0 2rem 1rem; max-width: 1100px; margin: 0 auto;">
+    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); font-family: var(--mono); margin-bottom: 1rem;">📖 Hoofdstukken</div>
+  </div>
+
+  <div class="chapter-grid" id="chapter-grid"></div>
+
+  <div style="padding: 0 2rem 1rem; max-width: 1100px; margin: 0 auto;">
+    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); font-family: var(--mono); margin-bottom: 1rem;">🏆 Achievements</div>
+  </div>
+  <div class="achievements" id="achievements-strip"></div>
+</div>
+
+<!-- ==================== LESSON PAGE ==================== -->
+<div class="page" id="page-lessons">
+  <div class="lesson-layout">
+    <aside class="lesson-sidebar">
+      <span class="ls-back" onclick="showPage('home')">← Terug naar overzicht</span>
+      <div class="ls-title" id="ls-chapter-title">Hoofdstuk</div>
+      <ul class="step-list" id="step-list"></ul>
+      <div style="margin-top: 2rem; font-family: var(--mono); font-size: 11px; color: var(--text2); line-height: 1.8;">
+        <div>Stap: <span id="ls-step-count" style="color:var(--text)">0/0</span></div>
+        <div>XP: <span id="ls-xp" style="color:var(--yellow)">0</span></div>
+      </div>
+    </aside>
+    <main class="lesson-main" id="lesson-main"></main>
+  </div>
+</div>
+
+<!-- ==================== SANDBOX PAGE ==================== -->
+<div class="page" id="page-sandbox">
+  <div class="sandbox-layout">
+    <div class="sandbox-editor-panel">
+      <div class="sandbox-tabs">
+        <div class="stab active" onclick="switchSandboxTab('html')">HTML</div>
+        <div class="stab" onclick="switchSandboxTab('css')">CSS</div>
+        <div class="stab" onclick="switchSandboxTab('js')">JavaScript</div>
+        <button class="sandbox-run" onclick="runSandbox()">▶ Run</button>
+      </div>
+      <div class="sandbox-templates">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text2);margin-right:4px;">Voorbeelden:</span>
+        <div class="s-template" onclick="loadTemplate('leeg')">Leeg</div>
+        <div class="s-template" onclick="loadTemplate('hello')">Hello World</div>
+        <div class="s-template" onclick="loadTemplate('knop')">Knop met JS</div>
+        <div class="s-template" onclick="loadTemplate('lijst')">Genummerde lijst</div>
+        <div class="s-template" onclick="loadTemplate('kleuren')">CSS kleuren</div>
+        <div class="s-template" onclick="loadTemplate('formulier')">Formulier</div>
+        <div class="s-template" onclick="loadTemplate('flex')">Flexbox layout</div>
+        <div class="s-template" onclick="loadTemplate('kaart')">Info kaart</div>
+      </div>
+      <textarea class="sandbox-textarea active" id="sandbox-html" spellcheck="false" placeholder="Schrijf hier je HTML..."></textarea>
+      <textarea class="sandbox-textarea" id="sandbox-css" spellcheck="false" placeholder="Schrijf hier je CSS..."></textarea>
+      <textarea class="sandbox-textarea" id="sandbox-js" spellcheck="false" placeholder="Schrijf hier je JavaScript..."></textarea>
     </div>
-  </aside>
-
-  <main class="main" id="main-content">
-    <!-- Lesson content injected here -->
-  </main>
+    <div class="sandbox-preview-panel">
+      <div class="sandbox-preview-header">
+        <span>👁 Live preview</span>
+        <span id="sandbox-hint-text" style="font-size:11px;color:var(--text2)">Klik Run om te zien wat je gemaakt hebt!</span>
+      </div>
+      <iframe class="sandbox-iframe" id="sandbox-iframe" sandbox="allow-scripts"></iframe>
+    </div>
+  </div>
 </div>
 
-<div class="xp-toast" id="xp-toast">
-  <span>⚡</span><span id="toast-text">+20 XP verdiend!</span>
+<!-- ==================== PORTFOLIO PAGE ==================== -->
+<div class="page" id="page-portfolio">
+  <div class="portfolio-page">
+    <div class="portfolio-header">
+      <h1>🌐 Jouw Website</h1>
+      <p>Elke les die je afrondt, bouwt een stukje van je eigen site. Dit is wat je tot nu toe hebt!</p>
+    </div>
+
+    <div class="portfolio-site-preview">
+      <div class="portfolio-topbar">
+        <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+        <div class="url-bar">mijnsite.nl</div>
+      </div>
+      <iframe class="portfolio-frame" id="portfolio-frame" sandbox="allow-scripts"></iframe>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-family: var(--mono); font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">✏️ Pas je site aan</div>
+      <div class="portfolio-sections" id="portfolio-sections"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="updatePortfolio()">🔄 Site bijwerken</button>
+      <button class="btn btn-s" onclick="downloadSite()">⬇ Download HTML</button>
+    </div>
+  </div>
 </div>
+
+<div class="toast" id="toast"><span>⚡</span><span id="toast-text">+20 XP!</span></div>
 
 <script>
-const lessons = [
+// ==================== DATA ====================
+const chapters = [
   {
-    tag: "Les 1 — Basis",
-    title: "Wat is HTML?",
-    desc: "HTML is de taal waarmee je webpagina's bouwt. Elke website die je ziet, begint met HTML.",
-    steps: [
+    id: 0,
+    title: "Wat is een website?",
+    desc: "Begrijp wat HTML is, hoe browsers werken en waarom code er zo uitziet.",
+    badge: "easy",
+    badgeText: "Makkelijk",
+    skills: ["Begrijpt HTML", "Kent tags", "Weet wat een browser doet"],
+    lessons: [
       {
+        title: "Hoe werkt een website?",
         type: "theory",
-        content: `<strong>HTML</strong> staat voor <code>HyperText Markup Language</code>. Het is geen echte programmeertaal — het is een <strong>opmaaktaal</strong>. Dat betekent dat je aan de browser vertelt hoe de pagina eruit moet zien.\n\nEen HTML-bestand bestaat uit <code>tags</code>. Een tag is een woord tussen < en > tekens.\n\nElke "open" tag heeft een bijpassende "sluit" tag met een / erin.`,
-        example: `<span class="cmt">&lt;!-- Dit is een HTML-tag --&gt;</span>\n<span class="tag">&lt;p&gt;</span>Dit is een paragraaf.<span class="tag">&lt;/p&gt;</span>\n<span class="cmt">&lt;!-- ↑ opening    ↑ sluiting --&gt;</span>`
+        content: `Stel je voor: je typt een adres in je browser. De browser stuurt een bericht naar een <strong>server</strong> — een grote computer ergens op de wereld. Die server stuurt je een bestand terug: een <strong>HTML-bestand</strong>.\n\nDe browser leest dat bestand en toont het als een mooie pagina. Jij ziet tekst, foto's en knoppen — maar achter de schermen is het gewoon tekst met speciale codes.\n\nDie speciale codes heten <code>tags</code>. En die ga jij leren schrijven!`,
+        example: `<span class="cmt">&lt;!-- Zo ziet een website achter de schermen uit --&gt;</span>\n<span class="tag">&lt;h1&gt;</span>Dit is een grote titel<span class="tag">&lt;/h1&gt;</span>\n<span class="tag">&lt;p&gt;</span>Dit is een stukje tekst.<span class="tag">&lt;/p&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>="<span class="val">foto.jpg</span>"<span class="tag">&gt;</span>`
       },
       {
+        title: "Wat is een tag?",
+        type: "theory",
+        content: `Een <strong>tag</strong> is een woord tussen <code>&lt;</code> en <code>&gt;</code> tekens. Bijna elke tag heeft een opening én een sluiting.\n\nDe sluitende tag heeft een <code>/</code> voor het woord.\n\nAlles <strong>tussen</strong> de opening en sluiting is de <em>inhoud</em> van die tag.`,
+        example: `<span class="tag">&lt;p&gt;</span>     <span class="cmt">← opening tag</span>\n  Hallo wereld!\n<span class="tag">&lt;/p&gt;</span>    <span class="cmt">← sluitende tag</span>\n\n<span class="cmt">&lt;!-- De p staat voor "paragraaf" --&gt;</span>`
+      },
+      {
+        title: "Schrijf je eerste tag",
         type: "code",
-        instruction: "Schrijf een <code>&lt;p&gt;</code> tag met de tekst: <strong>Hallo wereld!</strong>",
-        hint: "<p>Hallo wereld!</p>",
-        check: (val) => val.includes("<p>") && val.includes("</p>") && val.toLowerCase().includes("hallo"),
+        instruction: "Schrijf een <code>&lt;p&gt;</code> tag met daarin de tekst: <strong>Dit is mijn eerste code!</strong>",
+        hint: "<p>Dit is mijn eerste code!</p>",
+        check: v => v.includes("<p>") && v.includes("</p>") && v.length > 10,
+        xp: 15
+      },
+      {
+        title: "Snelle quiz",
+        type: "quiz",
+        question: "Wat is het verschil tussen <code>&lt;p&gt;</code> en <code>&lt;/p&gt;</code>?",
+        options: ["Geen verschil, ze doen hetzelfde", "<p> opent, </p> sluit de tag", "<p> is voor titels, </p> voor tekst", "De / maakt de tekst cursief"],
+        correct: 1,
+        xp: 10
+      }
+    ]
+  },
+  {
+    id: 1,
+    title: "HTML structuur",
+    desc: "Leer de basisstructuur van elke HTML-pagina. Elk HTML-bestand begint hetzelfde.",
+    badge: "easy",
+    badgeText: "Makkelijk",
+    skills: ["html/head/body", "Titels instellen", "Commentaar schrijven"],
+    lessons: [
+      {
+        title: "De basis van elke pagina",
+        type: "theory",
+        content: `Elke HTML-pagina heeft dezelfde basisstructuur. Het is als een brief: je hebt een envelop, een kopgedeelte en de eigenlijke inhoud.\n\n<code>&lt;html&gt;</code> — de buitenste laag, alles zit hierin\n<code>&lt;head&gt;</code> — info voor de browser (niet zichtbaar)\n<code>&lt;body&gt;</code> — alles wat je ziet op de pagina`,
+        example: `<span class="tag">&lt;html&gt;</span>\n  <span class="tag">&lt;head&gt;</span>\n    <span class="tag">&lt;title&gt;</span>Mijn pagina<span class="tag">&lt;/title&gt;</span>\n  <span class="tag">&lt;/head&gt;</span>\n  <span class="tag">&lt;body&gt;</span>\n    <span class="cmt">&lt;!-- Hier komt alles wat je ziet --&gt;</span>\n    <span class="tag">&lt;p&gt;</span>Hallo!<span class="tag">&lt;/p&gt;</span>\n  <span class="tag">&lt;/body&gt;</span>\n<span class="tag">&lt;/html&gt;</span>`
+      },
+      {
+        title: "Commentaar schrijven",
+        type: "theory",
+        content: `Met <code>&lt;!-- --&gt;</code> schrijf je een <strong>commentaar</strong>. De browser toont dit NIET aan de bezoeker. Het is een notitie voor jezelf.\n\nGoede developers schrijven commentaar om uit te leggen wat hun code doet. Zo begrijp je het later nog!`,
+        example: `<span class="cmt">&lt;!-- Dit is een commentaar, niemand ziet dit --&gt;</span>\n<span class="tag">&lt;p&gt;</span>Dit wel!<span class="tag">&lt;/p&gt;</span>\n<span class="cmt">&lt;!-- TODO: later een foto toevoegen --&gt;</span>`
+      },
+      {
+        title: "Schrijf de basis HTML",
+        type: "code",
+        instruction: "Schrijf een volledige HTML-structuur met <code>html</code>, <code>head</code>, <code>title</code> en <code>body</code>. Zet in de body een <code>p</code> tag.",
+        hint: "<html>\n  <head>\n    <title>Mijn Site</title>\n  </head>\n  <body>\n    <p>Hallo wereld!</p>\n  </body>\n</html>",
+        check: v => v.includes("<html>") && v.includes("<head>") && v.includes("<body>") && v.includes("<p>"),
+        xp: 25
+      },
+      {
+        title: "Wat hoort in head?",
+        type: "quiz",
+        question: "Wat zit er in de <code>&lt;head&gt;</code> tag?",
+        options: ["Tekst en afbeeldingen", "Info voor de browser, zoals de paginatitel", "Knoppen en links", "CSS en JavaScript altijd"],
+        correct: 1,
+        xp: 10
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Tekst & koppen",
+    desc: "Leer koppen, paragrafen, vette tekst en lijsten. De bouwstenen van elke pagina.",
+    badge: "easy",
+    badgeText: "Makkelijk",
+    skills: ["h1 t/m h6", "strong & em", "Lijsten maken"],
+    lessons: [
+      {
+        title: "Koppen: h1 tot h6",
+        type: "theory",
+        content: `HTML heeft 6 niveaus van koppen. <code>&lt;h1&gt;</code> is de grootste, <code>&lt;h6&gt;</code> de kleinste.\n\nGebruik koppen om je pagina te structureren — zoals hoofdstukken in een boek. Gebruik <code>&lt;h1&gt;</code> maar één keer per pagina voor de hoofdtitel.`,
+        example: `<span class="tag">&lt;h1&gt;</span>Grote hoofdtitel<span class="tag">&lt;/h1&gt;</span>\n<span class="tag">&lt;h2&gt;</span>Subtitel<span class="tag">&lt;/h2&gt;</span>\n<span class="tag">&lt;h3&gt;</span>Nog kleiner<span class="tag">&lt;/h3&gt;</span>\n<span class="tag">&lt;p&gt;</span>Gewone tekst hieronder.<span class="tag">&lt;/p&gt;</span>`
+      },
+      {
+        title: "Tekst opmaken",
+        type: "theory",
+        content: `Je kan tekst opmaken met speciale tags:\n\n<code>&lt;strong&gt;</code> — maakt tekst <strong>vetgedrukt</strong> (belangrijk!)\n<code>&lt;em&gt;</code> — maakt tekst <em>cursief</em> (nadruk)\n<code>&lt;br&gt;</code> — een regeleinde (geen sluitende tag nodig)`,
+        example: `<span class="tag">&lt;p&gt;</span>\n  Dit is <span class="tag">&lt;strong&gt;</span>heel belangrijk<span class="tag">&lt;/strong&gt;</span>.\n  En dit is <span class="tag">&lt;em&gt;</span>een beetje cursief<span class="tag">&lt;/em&gt;</span>.<span class="tag">&lt;br&gt;</span>\n  En dit staat op een nieuwe regel.\n<span class="tag">&lt;/p&gt;</span>`
+      },
+      {
+        title: "Lijsten maken",
+        type: "theory",
+        content: `Er zijn twee soorten lijsten:\n\n<code>&lt;ul&gt;</code> — ongeordende lijst (met bolletjes)\n<code>&lt;ol&gt;</code> — geordende lijst (met nummers)\n\nElk item in een lijst gebruik je <code>&lt;li&gt;</code> voor (list item).`,
+        example: `<span class="tag">&lt;ul&gt;</span>\n  <span class="tag">&lt;li&gt;</span>Appel<span class="tag">&lt;/li&gt;</span>\n  <span class="tag">&lt;li&gt;</span>Banaan<span class="tag">&lt;/li&gt;</span>\n<span class="tag">&lt;/ul&gt;</span>\n\n<span class="tag">&lt;ol&gt;</span>\n  <span class="tag">&lt;li&gt;</span>Stap 1<span class="tag">&lt;/li&gt;</span>\n  <span class="tag">&lt;li&gt;</span>Stap 2<span class="tag">&lt;/li&gt;</span>\n<span class="tag">&lt;/ol&gt;</span>`
+      },
+      {
+        title: "Maak een lijst",
+        type: "code",
+        instruction: "Maak een <code>&lt;ul&gt;</code> lijst met minstens 3 <code>&lt;li&gt;</code> items. Kies zelf wat erin staat!",
+        hint: "<ul>\n  <li>Pizza</li>\n  <li>Spaghetti</li>\n  <li>Lasagne</li>\n</ul>",
+        check: v => v.includes("<ul>") && (v.match(/<li>/g)||[]).length >= 3,
         xp: 20
       },
       {
+        title: "Quiz: lijsten",
         type: "quiz",
-        question: "Wat doet de <code>&lt;/p&gt;</code> tag?",
-        options: ["Start een paragraaf", "Sluit een paragraaf", "Maakt tekst vet", "Voegt een link toe"],
-        correct: 1,
-        xp: 10
-      }
-    ]
-  },
-  {
-    tag: "Les 2 — Tags",
-    title: "Je eerste HTML-tags",
-    desc: "Elke webpagina heeft een basisstructuur. Leer de tags die altijd aanwezig zijn.",
-    steps: [
-      {
-        type: "theory",
-        content: `Elke HTML-pagina heeft een vaste structuur. Het begin is altijd hetzelfde:\n\n<code>&lt;html&gt;</code> — de buitenste tag, alles zit hierin.\n<code>&lt;head&gt;</code> — info voor de browser (zoals de titel).\n<code>&lt;body&gt;</code> — wat de gebruiker écht ziet.`,
-        example: `<span class="tag">&lt;html&gt;</span>\n  <span class="tag">&lt;head&gt;</span>\n    <span class="tag">&lt;title&gt;</span>Mijn pagina<span class="tag">&lt;/title&gt;</span>\n  <span class="tag">&lt;/head&gt;</span>\n  <span class="tag">&lt;body&gt;</span>\n    <span class="tag">&lt;p&gt;</span>Hallo!<span class="tag">&lt;/p&gt;</span>\n  <span class="tag">&lt;/body&gt;</span>\n<span class="tag">&lt;/html&gt;</span>`
-      },
-      {
-        type: "code",
-        instruction: "Schrijf de basis HTML-structuur met een <code>&lt;title&gt;</code> die 'Mijn Site' zegt en een <code>&lt;p&gt;</code> tag in de body.",
-        hint: "<html>\n  <head>\n    <title>Mijn Site</title>\n  </head>\n  <body>\n    <p>Hallo!</p>\n  </body>\n</html>",
-        check: (val) => val.includes("<html>") && val.includes("<title>") && val.includes("<body>"),
-        xp: 30
-      },
-      {
-        type: "quiz",
-        question: "Wat zit er in de <code>&lt;body&gt;</code> tag?",
-        options: ["De stijlen van de pagina", "De naam van de pagina", "Alles wat de gebruiker ziet", "JavaScript code"],
+        question: "Welke tag gebruik je voor een GENUMMERDE lijst?",
+        options: ["<ul>", "<nl>", "<ol>", "<list>"],
         correct: 2,
         xp: 10
       }
     ]
   },
   {
-    tag: "Les 3 — Tekst",
-    title: "Koppen & tekst opmaken",
-    desc: "Leer hoe je titels maakt en tekst vetgedrukt of cursief kan maken.",
-    steps: [
-      {
-        type: "theory",
-        content: `HTML heeft 6 niveaus van koppen: <code>&lt;h1&gt;</code> tot <code>&lt;h6&gt;</code>. <code>h1</code> is de grootste, <code>h6</code> de kleinste.\n\nVoor tekst heb je:\n<strong>&lt;strong&gt;</strong> — vetgedrukt\n<strong>&lt;em&gt;</strong> — cursief (emphasis)\n<strong>&lt;p&gt;</strong> — gewone paragraaf`,
-        example: `<span class="tag">&lt;h1&gt;</span>Grote titel<span class="tag">&lt;/h1&gt;</span>\n<span class="tag">&lt;h2&gt;</span>Iets kleiner<span class="tag">&lt;/h2&gt;</span>\n<span class="tag">&lt;p&gt;</span>Dit is <span class="tag">&lt;strong&gt;</span>vet<span class="tag">&lt;/strong&gt;</span> en dit is <span class="tag">&lt;em&gt;</span>cursief<span class="tag">&lt;/em&gt;</span>.<span class="tag">&lt;/p&gt;</span>`
-      },
-      {
-        type: "code",
-        instruction: "Maak een <code>&lt;h1&gt;</code> met de tekst 'Welkom' en een <code>&lt;p&gt;</code> met daarin een <code>&lt;strong&gt;</code> woord.",
-        hint: "<h1>Welkom</h1>\n<p>Dit is <strong>belangrijk</strong>.</p>",
-        check: (val) => val.includes("<h1>") && val.includes("<strong>") && val.includes("</strong>"),
-        xp: 25
-      },
-      {
-        type: "quiz",
-        question: "Welke tag gebruik je voor de GROOTSTE kop?",
-        options: ["<h6>", "<h3>", "<h1>", "<big>"],
-        correct: 2,
-        xp: 10
-      }
-    ]
-  },
-  {
-    tag: "Les 4 — Links",
+    id: 3,
     title: "Links & afbeeldingen",
-    desc: "Leer hoe je naar andere pagina's linkt en afbeeldingen toevoegt.",
-    steps: [
+    desc: "Maak klikbare links naar andere pagina's en voeg afbeeldingen toe aan je site.",
+    badge: "easy",
+    badgeText: "Makkelijk",
+    skills: ["Anchor tags", "href attribuut", "img src & alt"],
+    lessons: [
       {
+        title: "Wat is een attribuut?",
         type: "theory",
-        content: `Een <code>&lt;a&gt;</code> tag maakt een klikbare link. Het <code>href</code> attribuut zegt waar de link naartoe gaat.\n\nEen <code>&lt;img&gt;</code> tag voegt een afbeelding toe. Let op: <code>&lt;img&gt;</code> heeft <strong>geen sluitende tag</strong>! Het <code>src</code> attribuut bevat het pad naar de afbeelding.`,
-        example: `<span class="cmt">&lt;!-- Een link --&gt;</span>\n<span class="tag">&lt;a</span> <span class="attr">href</span>="<span class="val">https://google.com</span>"<span class="tag">&gt;</span>Klik hier<span class="tag">&lt;/a&gt;</span>\n\n<span class="cmt">&lt;!-- Een afbeelding --&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>="<span class="val">foto.jpg</span>" <span class="attr">alt</span>="<span class="val">beschrijving</span>"<span class="tag">&gt;</span>`
+        content: `Tags kunnen extra informatie krijgen via <strong>attributen</strong>. Een attribuut staat altijd IN de openingstag, na de tagnaam.\n\nHet ziet er zo uit: <code>naam="waarde"</code>\n\nJe kan meerdere attributen hebben in één tag, gescheiden door spaties.`,
+        example: `<span class="cmt">&lt;!-- tag met één attribuut --&gt;</span>\n<span class="tag">&lt;p</span> <span class="attr">class</span>="<span class="val">intro</span>"<span class="tag">&gt;</span>Tekst<span class="tag">&lt;/p&gt;</span>\n\n<span class="cmt">&lt;!-- tag met twee attributen --&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>="<span class="val">foto.jpg</span>" <span class="attr">alt</span>="<span class="val">Een foto</span>"<span class="tag">&gt;</span>`
       },
       {
+        title: "Links maken met <a>",
+        type: "theory",
+        content: `De <code>&lt;a&gt;</code> tag maakt een klikbare link. <em>a</em> staat voor <em>anchor</em>.\n\nHet <code>href</code> attribuut zegt waar de link naartoe gaat.\nMet <code>target="_blank"</code> opent de link in een nieuw tabblad.`,
+        example: `<span class="cmt">&lt;!-- Gewone link --&gt;</span>\n<span class="tag">&lt;a</span> <span class="attr">href</span>="<span class="val">https://google.com</span>"<span class="tag">&gt;</span>Ga naar Google<span class="tag">&lt;/a&gt;</span>\n\n<span class="cmt">&lt;!-- Link in nieuw tabblad --&gt;</span>\n<span class="tag">&lt;a</span> <span class="attr">href</span>="<span class="val">https://youtube.com</span>" <span class="attr">target</span>="<span class="val">_blank</span>"<span class="tag">&gt;</span>YouTube<span class="tag">&lt;/a&gt;</span>`
+      },
+      {
+        title: "Afbeeldingen invoegen",
+        type: "theory",
+        content: `De <code>&lt;img&gt;</code> tag voegt een afbeelding toe. Let op: <code>&lt;img&gt;</code> heeft <strong>geen sluitende tag</strong>!\n\n<code>src</code> — het pad of de URL van de afbeelding\n<code>alt</code> — beschrijving voor mensen die de afbeelding niet kunnen zien (altijd invullen!)`,
+        example: `<span class="cmt">&lt;!-- Afbeelding van het web --&gt;</span>\n<span class="tag">&lt;img</span>\n  <span class="attr">src</span>="<span class="val">https://placekitten.com/200/150</span>"\n  <span class="attr">alt</span>="<span class="val">Een schattig katje</span>"\n<span class="tag">&gt;</span>`
+      },
+      {
+        title: "Schrijf een link",
         type: "code",
-        instruction: "Schrijf een link naar <code>https://google.com</code> met de tekst 'Ga naar Google'.",
-        hint: '<a href="https://google.com">Ga naar Google</a>',
-        check: (val) => val.includes("<a") && val.includes('href=') && val.includes("google") && val.includes("</a>"),
+        instruction: "Schrijf een link naar <code>https://wikipedia.org</code> met de tekst 'Wikipedia'. Voeg ook <code>target=\"_blank\"</code> toe zodat het in een nieuw tabblad opent.",
+        hint: '<a href="https://wikipedia.org" target="_blank">Wikipedia</a>',
+        check: v => v.includes("<a") && v.includes("href=") && v.includes("wikipedia") && v.includes("</a>"),
         xp: 25
       },
       {
+        title: "Quiz: attributen",
         type: "quiz",
-        question: "Welk attribuut gebruik je bij <code>&lt;a&gt;</code> om de bestemming in te stellen?",
-        options: ["src", "href", "link", "url"],
-        correct: 1,
+        question: "Welk attribuut gebruik je bij <code>&lt;img&gt;</code> voor de beschrijving?",
+        options: ["src", "href", "alt", "desc"],
+        correct: 2,
         xp: 10
       }
     ]
   },
   {
-    tag: "Les 5 — CSS",
-    title: "CSS: kleuren & stijlen",
-    desc: "CSS maakt je pagina mooi. Leer hoe je kleuren, lettergroottes en meer instelt.",
-    steps: [
+    id: 4,
+    title: "CSS basis",
+    desc: "Geef je pagina kleur en stijl. CSS maakt van saaie tekst een echte website.",
+    badge: "medium",
+    badgeText: "Gemiddeld",
+    skills: ["Selectors", "Kleur & achtergrond", "Font-size & family"],
+    lessons: [
       {
+        title: "Wat is CSS?",
         type: "theory",
-        content: `CSS staat voor <code>Cascading Style Sheets</code>. Je schrijft het in een <code>&lt;style&gt;</code> tag in je HTML.\n\nEen CSS-regel ziet er zo uit:\n<strong>selector</strong> { eigenschap: waarde; }\n\nDe <strong>selector</strong> zegt op welk element het van toepassing is. Dan open je een {, zet je de stijlen in, en sluit je met }.`,
-        example: `<span class="tag">&lt;style&gt;</span>\n  <span class="fn">p</span> {\n    <span class="attr">color</span>: <span class="val">red</span>;\n    <span class="attr">font-size</span>: <span class="val">20px</span>;\n  }\n  <span class="fn">h1</span> {\n    <span class="attr">background-color</span>: <span class="val">blue</span>;\n    <span class="attr">color</span>: <span class="val">white</span>;\n  }\n<span class="tag">&lt;/style&gt;</span>`
+        content: `CSS staat voor <code>Cascading Style Sheets</code>. Terwijl HTML de <em>structuur</em> is, is CSS de <em>stijl</em>.\n\nJe schrijft CSS in een <code>&lt;style&gt;</code> tag in je HTML, of in een apart bestand.\n\nEen CSS-regel bestaat uit:\n— een <strong>selector</strong>: op welk element\n— een <strong>eigenschap</strong>: wat je wil veranderen\n— een <strong>waarde</strong>: hoe je het wil veranderen`,
+        example: `<span class="fn">p</span> {                    <span class="cmt">← selector</span>\n  <span class="attr">color</span>: <span class="val">red</span>;         <span class="cmt">← eigenschap: waarde</span>\n  <span class="attr">font-size</span>: <span class="val">18px</span>;   <span class="cmt">← nog een eigenschap</span>\n}`
       },
       {
+        title: "Kleuren in CSS",
+        type: "theory",
+        content: `Je kan kleuren op verschillende manieren aangeven:\n\n<code>color: red;</code> — kleur naam (Engels)\n<code>color: #ff0000;</code> — hexadecimale code\n<code>color: rgb(255, 0, 0);</code> — rood/groen/blauw waarden\n\n<code>color</code> is voor tekst. <code>background-color</code> is voor de achtergrond.`,
+        example: `<span class="fn">h1</span> {\n  <span class="attr">color</span>: <span class="val">#e94560</span>;          <span class="cmt">← roze/rood</span>\n  <span class="attr">background-color</span>: <span class="val">#1a1a2e</span>;  <span class="cmt">← donker blauw</span>\n}\n\n<span class="fn">p</span> {\n  <span class="attr">color</span>: <span class="val">rgb(100, 200, 150)</span>;  <span class="cmt">← groenig</span>\n}`
+      },
+      {
+        title: "Lettertype & grootte",
+        type: "theory",
+        content: `Met CSS kan je het lettertype en de grootte aanpassen:\n\n<code>font-size: 20px;</code> — grootte in pixels\n<code>font-weight: bold;</code> — vetgedrukt\n<code>font-family: Arial, sans-serif;</code> — lettertype\n<code>text-align: center;</code> — uitlijning`,
+        example: `<span class="fn">h1</span> {\n  <span class="attr">font-size</span>: <span class="val">48px</span>;\n  <span class="attr">font-weight</span>: <span class="val">bold</span>;\n  <span class="attr">text-align</span>: <span class="val">center</span>;\n  <span class="attr">font-family</span>: <span class="val">Georgia, serif</span>;\n}`
+      },
+      {
+        title: "Schrijf je eerste CSS",
         type: "code",
-        instruction: "Schrijf CSS in een <code>&lt;style&gt;</code> tag die de <code>h1</code> de kleur <code>blue</code> geeft.",
-        hint: "<sty" + "le>\n  h1 {\n    color: blue;\n  }\n<\/style>",
-        check: (val) => val.toLowerCase().includes("<style") && val.includes("h1") && val.includes("color") && val.includes("blue"),
+        instruction: "Schrijf een <code>&lt;sty le&gt;</code> tag (zonder spatie) met CSS die:\n• de <code>h1</code> kleur <code>blue</code> geeft\n• de <code>p</code> een font-size van <code>18px</code> geeft",
+        hint: "<style>\n  h1 {\n    color: blue;\n  }\n  p {\n    font-size: 18px;\n  }\n</style>",
+        check: v => v.toLowerCase().includes("<style") && v.includes("h1") && v.includes("color") && v.includes("p") && v.includes("font-size"),
         xp: 30
       },
       {
+        title: "Quiz: CSS",
         type: "quiz",
-        question: "Hoe schrijf je de kleur rood in CSS?",
-        options: ["font: red;", "color: red;", "text-color: red;", "style: red;"],
+        question: "Welke CSS eigenschap verander je de ACHTERGRONDKLEUR?",
+        options: ["color", "background", "bg-color", "background-color"],
+        correct: 3,
+        xp: 10
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "CSS: afstand & randen",
+    desc: "Leer padding, margin en borders — de sleutel tot een nette lay-out.",
+    badge: "medium",
+    badgeText: "Gemiddeld",
+    skills: ["Margin & padding", "Border", "Box model"],
+    lessons: [
+      {
+        title: "Het box model",
+        type: "theory",
+        content: `Elk HTML-element is een rechthoekige doos. Die doos heeft 4 lagen:\n\n<code>content</code> — de eigenlijke inhoud (tekst, foto)\n<code>padding</code> — ruimte BINNEN de rand\n<code>border</code> — de rand zelf\n<code>margin</code> — ruimte BUITEN de rand (tussen elementen)`,
+        example: `<span class="cmt">&lt;!-- Visueel voorgesteld: --&gt;</span>\n\n<span class="cmt">[ margin                          ]</span>\n<span class="cmt">[   [ border                   ]  ]</span>\n<span class="cmt">[   [   [ padding          ]   ]  ]</span>\n<span class="cmt">[   [   [   content        ]   ]  ]</span>`
+      },
+      {
+        title: "Margin & Padding",
+        type: "theory",
+        content: `<code>padding: 20px;</code> — 20px aan alle kanten\n<code>padding: 10px 20px;</code> — 10px boven/onder, 20px links/rechts\n<code>margin: 0 auto;</code> — centreert een element horizontaal\n\nJe kan ook één kant specificeren:\n<code>margin-top: 30px;</code>\n<code>padding-left: 15px;</code>`,
+        example: `<span class="fn">div</span> {\n  <span class="attr">padding</span>: <span class="val">20px</span>;\n  <span class="attr">margin</span>: <span class="val">10px auto</span>;\n  <span class="attr">margin-top</span>: <span class="val">30px</span>;\n}`
+      },
+      {
+        title: "Randen (borders)",
+        type: "theory",
+        content: `Met <code>border</code> zet je een rand rondom een element:\n\n<code>border: 2px solid black;</code>\n        ↑ dikte  ↑ stijl  ↑ kleur\n\nStijlen: <code>solid</code>, <code>dashed</code>, <code>dotted</code>, <code>double</code>\n\nMet <code>border-radius</code> maak je ronde hoeken!`,
+        example: `<span class="fn">p</span> {\n  <span class="attr">border</span>: <span class="val">2px solid #e94560</span>;\n  <span class="attr">border-radius</span>: <span class="val">8px</span>;      <span class="cmt">← ronde hoeken</span>\n  <span class="attr">padding</span>: <span class="val">15px</span>;           <span class="cmt">← ruimte binnen de rand</span>\n}`
+      },
+      {
+        title: "Stijl een doos",
+        type: "code",
+        instruction: "Schrijf CSS voor een <code>div</code> met:\n• padding van <code>20px</code>\n• border van <code>2px solid blue</code>\n• border-radius van <code>10px</code>",
+        hint: "<style>\n  div {\n    padding: 20px;\n    border: 2px solid blue;\n    border-radius: 10px;\n  }\n</style>",
+        check: v => v.toLowerCase().includes("<style") && v.includes("padding") && v.includes("border") && v.includes("border-radius"),
+        xp: 30
+      },
+      {
+        title: "Quiz: box model",
+        type: "quiz",
+        question: "Wat doet <code>margin: 0 auto;</code>?",
+        options: ["Verwijdert alle marges", "Centreert het element horizontaal", "Maakt de tekst groter", "Voegt een rand toe"],
         correct: 1,
         xp: 10
       }
     ]
   },
   {
-    tag: "Les 6 — JavaScript",
-    title: "JavaScript basics",
-    desc: "JavaScript maakt je pagina interactief. Leer variabelen, functies en events.",
-    steps: [
+    id: 6,
+    title: "JavaScript intro",
+    desc: "Maak je pagina interactief! JavaScript reageert op klikken en doet berekeningen.",
+    badge: "medium",
+    badgeText: "Gemiddeld",
+    skills: ["Variabelen", "alert & console.log", "getElementById"],
+    lessons: [
       {
+        title: "Wat is JavaScript?",
         type: "theory",
-        content: `JavaScript (JS) voeg je toe met een <code>&lt;script&gt;</code> tag. Met JS kan je dingen laten bewegen, berekenen, of reageren op klikken.\n\n<code>alert()</code> toont een popupje.\n<code>console.log()</code> schrijft naar de console (voor jou als developer).\n<code>document.getElementById()</code> vindt een HTML-element.`,
-        example: `<span class="tag">&lt;script&gt;</span>\n  <span class="cmt">// Variabele aanmaken</span>\n  <span class="kw">let</span> naam = <span class="str">"Jij"</span>;\n\n  <span class="cmt">// Functie aanmaken</span>\n  <span class="kw">function</span> <span class="fn">zegHallo</span>() {\n    <span class="fn">alert</span>(<span class="str">"Hallo, "</span> + naam);\n  }\n<span class="tag">&lt;/script&gt;</span>\n\n<span class="tag">&lt;button</span> <span class="attr">onclick</span>="<span class="val">zegHallo()</span>"<span class="tag">&gt;</span>Klik mij<span class="tag">&lt;/button&gt;</span>`
+        content: `HTML is de structuur, CSS is de stijl, en <strong>JavaScript</strong> is het gedrag.\n\nMet JavaScript kan je:\n• Reageren op klikken van de gebruiker\n• Tekst op de pagina aanpassen\n• Berekeningen maken\n• Animaties starten\n\nJe schrijft JS in een <code>&lt;script&gt;</code> tag, het liefst onderaan je body.`,
+        example: `<span class="tag">&lt;script&gt;</span>\n  <span class="cmt">// Dit is JavaScript!</span>\n  <span class="fn">alert</span>(<span class="str">"Hallo wereld!"</span>);\n  <span class="fn">console</span>.<span class="fn">log</span>(<span class="str">"Dit zie je in de console"</span>);\n<span class="tag">&lt;/script&gt;</span>`
       },
       {
+        title: "Variabelen",
+        type: "theory",
+        content: `Een <strong>variabele</strong> is een naamplaatje voor een waarde. Je maakt er één met <code>let</code>.\n\n<code>let naam = "Jij";</code> — tekst (altijd tussen aanhalingstekens)\n<code>let leeftijd = 16;</code> — getal (geen aanhalingstekens)\n<code>let klopt = true;</code> — waar/niet waar`,
+        example: `<span class="tag">&lt;script&gt;</span>\n  <span class="kw">let</span> naam = <span class="str">"Marie"</span>;\n  <span class="kw">let</span> leeftijd = <span class="num">17</span>;\n  <span class="kw">let</span> begroeting = <span class="str">"Hallo, "</span> + naam;\n\n  <span class="fn">console</span>.<span class="fn">log</span>(begroeting); <span class="cmt">// "Hallo, Marie"</span>\n<span class="tag">&lt;/script&gt;</span>`
+      },
+      {
+        title: "De pagina aanpassen",
+        type: "theory",
+        content: `Met <code>document.getElementById()</code> vind je een element op de pagina.\nMet <code>.innerHTML</code> verander je de inhoud ervan.\n\nGeef je HTML-element een <code>id</code> attribuut, dan kan JS het vinden!`,
+        example: `<span class="tag">&lt;p</span> <span class="attr">id</span>="<span class="val">mijn-tekst</span>"<span class="tag">&gt;</span>Originele tekst<span class="tag">&lt;/p&gt;</span>\n\n<span class="tag">&lt;script&gt;</span>\n  <span class="kw">let</span> element = <span class="fn">document</span>.<span class="fn">getElementById</span>(<span class="str">"mijn-tekst"</span>);\n  element.innerHTML = <span class="str">"Nieuwe tekst!"</span>;\n<span class="tag">&lt;/script&gt;</span>`
+      },
+      {
+        title: "Schrijf JavaScript",
         type: "code",
-        instruction: "Maak een <code>&lt;script&gt;</code> tag met daarin een variabele <code>naam</code> die jouw naam bevat, en gebruik <code>console.log(naam)</code> om het te tonen.",
-        hint: "<scr" + "ipt>\n  let naam = \"jouw naam\";\n  console.log(naam);\n<\/script>",
-        check: (val) => val.toLowerCase().includes("<script") && val.includes("let") && val.includes("console.log"),
+        instruction: "Schrijf in een <code>&lt;scr ipt&gt;</code> (zonder spatie): maak een variabele <code>naam</code> met jouw naam, en gebruik <code>console.log</code> om die te printen.",
+        hint: "<script>\n  let naam = \"jouw naam hier\";\n  console.log(naam);\n<\/script>",
+        check: v => v.toLowerCase().includes("<script") && v.includes("let") && v.includes("console.log"),
+        xp: 30
+      },
+      {
+        title: "Quiz: JS",
+        type: "quiz",
+        question: "Hoe maak je een variabele aan in JavaScript?",
+        options: ["var naam;", "let naam =", "make naam =", "new naam"],
+        correct: 1,
+        xp: 10
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "JavaScript: functies",
+    desc: "Leer functies schrijven en reageren op klikken met onclick events.",
+    badge: "medium",
+    badgeText: "Gemiddeld",
+    skills: ["Functies", "onclick events", "if/else"],
+    lessons: [
+      {
+        title: "Functies",
+        type: "theory",
+        content: `Een <strong>functie</strong> is een stukje code met een naam. Je schrijft het één keer en kan het meerdere keren uitvoeren.\n\nJe maakt een functie met <code>function</code>, geeft het een naam, en zet de code tussen <code>{ }</code>.\nJe roept een functie aan door de naam te typen met <code>()</code> erachter.`,
+        example: `<span class="tag">&lt;script&gt;</span>\n  <span class="cmt">// Functie aanmaken</span>\n  <span class="kw">function</span> <span class="fn">zegHallo</span>() {\n    <span class="fn">alert</span>(<span class="str">"Hallo!"</span>);\n  }\n\n  <span class="cmt">// Functie aanroepen</span>\n  <span class="fn">zegHallo</span>();\n<span class="tag">&lt;/script&gt;</span>`
+      },
+      {
+        title: "Reageren op klikken",
+        type: "theory",
+        content: `Met het <code>onclick</code> attribuut op een HTML-element roep je een functie aan wanneer iemand erop klikt.\n\nTypisch gebruik je dit op een <code>&lt;button&gt;</code>.`,
+        example: `<span class="tag">&lt;button</span> <span class="attr">onclick</span>="<span class="val">zegHallo()</span>"<span class="tag">&gt;</span>Klik mij!<span class="tag">&lt;/button&gt;</span>\n\n<span class="tag">&lt;script&gt;</span>\n  <span class="kw">function</span> <span class="fn">zegHallo</span>() {\n    <span class="fn">alert</span>(<span class="str">"Je klikte op de knop!"</span>);\n  }\n<span class="tag">&lt;/script&gt;</span>`
+      },
+      {
+        title: "If/else: beslissingen",
+        type: "theory",
+        content: `Met <code>if</code> kan je beslissingen nemen in je code.\n\nAls de conditie <code>true</code> is, voert de eerste blok uit.\nAnders (<code>else</code>) voert de tweede blok uit.`,
+        example: `<span class="tag">&lt;script&gt;</span>\n  <span class="kw">let</span> uur = <span class="num">14</span>;\n\n  <span class="kw">if</span> (uur < <span class="num">12</span>) {\n    <span class="fn">alert</span>(<span class="str">"Goedemorgen!"</span>);\n  } <span class="kw">else</span> {\n    <span class="fn">alert</span>(<span class="str">"Goedemiddag!"</span>);\n  }\n<span class="tag">&lt;/script&gt;</span>`
+      },
+      {
+        title: "Maak een knop",
+        type: "code",
+        instruction: "Maak een <code>&lt;button&gt;</code> die bij klikken een <code>alert</code> toont. Schrijf ook de bijbehorende <code>function</code> in een <code>&lt;scr ipt&gt;</code> (zonder spatie).",
+        hint: '<button onclick="klik()">Klik mij!</button>\n\n<script>\n  function klik() {\n    alert("Je klikte!");\n  }\n<\/script>',
+        check: v => v.includes("<button") && v.includes("onclick") && v.toLowerCase().includes("<script") && v.includes("function") && v.includes("alert"),
         xp: 35
       },
       {
+        title: "Quiz: functies",
         type: "quiz",
-        question: "Wat doet <code>console.log()</code>?",
-        options: ["Toont een popup", "Schrijft naar de developer console", "Maakt een nieuwe variabele", "Stopt het script"],
-        correct: 1,
+        question: "Hoe roep je een functie genaamd <code>start</code> aan?",
+        options: ["function start", "call start()", "start()", "run start"],
+        correct: 2,
         xp: 10
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "CSS Flexbox",
+    desc: "Flexbox is de modernste manier om elementen naast of onder elkaar te zetten.",
+    badge: "hard",
+    badgeText: "Uitdagend",
+    skills: ["display:flex", "justify-content", "align-items", "flex-direction"],
+    lessons: [
+      {
+        title: "Waarom Flexbox?",
+        type: "theory",
+        content: `Vroeger was het moeilijk om dingen naast elkaar te zetten in HTML. Met <strong>Flexbox</strong> is dat super makkelijk.\n\nJe activeert Flexbox op een container met <code>display: flex;</code>. Dan kan je de kinderen van die container makkelijk positioneren.`,
+        example: `<span class="tag">&lt;div</span> <span class="attr">class</span>="<span class="val">container</span>"<span class="tag">&gt;</span>\n  <span class="tag">&lt;div&gt;</span>Item 1<span class="tag">&lt;/div&gt;</span>\n  <span class="tag">&lt;div&gt;</span>Item 2<span class="tag">&lt;/div&gt;</span>\n  <span class="tag">&lt;div&gt;</span>Item 3<span class="tag">&lt;/div&gt;</span>\n<span class="tag">&lt;/div&gt;</span>\n\n<span class="fn">.container</span> {\n  <span class="attr">display</span>: <span class="val">flex</span>;  <span class="cmt">← dit is genoeg!</span>\n}`
+      },
+      {
+        title: "Uitlijnen met Flexbox",
+        type: "theory",
+        content: `<code>justify-content</code> — horizontale uitlijning\n• <code>flex-start</code> — links (standaard)\n• <code>center</code> — gecentreerd\n• <code>flex-end</code> — rechts\n• <code>space-between</code> — gelijkmatig verdeeld\n\n<code>align-items</code> — verticale uitlijning\n• <code>center</code> — verticaal gecentreerd\n• <code>flex-start</code> — bovenaan`,
+        example: `<span class="fn">.container</span> {\n  <span class="attr">display</span>: <span class="val">flex</span>;\n  <span class="attr">justify-content</span>: <span class="val">space-between</span>;\n  <span class="attr">align-items</span>: <span class="val">center</span>;\n  <span class="attr">gap</span>: <span class="val">16px</span>;  <span class="cmt">← ruimte tussen items</span>\n}`
+      },
+      {
+        title: "Schrijf Flexbox CSS",
+        type: "code",
+        instruction: "Maak een <code>div</code> container met 3 items erin. Geef de container CSS met <code>display: flex</code> en <code>justify-content: space-between</code>.",
+        hint: "<div class=\"container\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>\n\n<style>\n  .container {\n    display: flex;\n    justify-content: space-between;\n  }\n</style>",
+        check: v => v.includes("display") && v.includes("flex") && v.includes("justify-content"),
+        xp: 40
+      },
+      {
+        title: "Quiz: Flexbox",
+        type: "quiz",
+        question: "Welke eigenschap centreert items verticaal in een flex container?",
+        options: ["justify-content: center", "vertical-align: center", "align-items: center", "flex-align: center"],
+        correct: 2,
+        xp: 10
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Je eigen website",
+    desc: "Combineer alles wat je geleerd hebt en bouw je eigen persoonlijke website!",
+    badge: "hard",
+    badgeText: "Eindproject",
+    skills: ["Alles gecombineerd", "Eigen design", "Portfolio site"],
+    lessons: [
+      {
+        title: "Wat ga je bouwen?",
+        type: "theory",
+        content: `Je gaat je eigen <strong>persoonlijke website</strong> bouwen! Die heeft:\n\n• Een <em>navigatiebalk</em> bovenaan\n• Een <em>hero sectie</em> met jouw naam en een korte beschrijving\n• Een <em>over mij</em> sectie\n• Een <em>vaardigheden</em> lijstje\n\nJe gebruikt HTML voor structuur, CSS voor stijl, en misschien wat JS voor interactiviteit.`,
+        example: `<span class="cmt">&lt;!-- Structuur van je site --&gt;</span>\n<span class="tag">&lt;nav&gt;</span>Navigatie<span class="tag">&lt;/nav&gt;</span>\n<span class="tag">&lt;header&gt;</span>Hero sectie<span class="tag">&lt;/header&gt;</span>\n<span class="tag">&lt;main&gt;</span>\n  <span class="tag">&lt;section&gt;</span>Over mij<span class="tag">&lt;/section&gt;</span>\n  <span class="tag">&lt;section&gt;</span>Vaardigheden<span class="tag">&lt;/section&gt;</span>\n<span class="tag">&lt;/main&gt;</span>`
+      },
+      {
+        title: "Navigatiebalk bouwen",
+        type: "code",
+        instruction: "Maak een <code>&lt;nav&gt;</code> element met daarin je naam als logo (een <code>&lt;strong&gt;</code>) en 3 links (<code>&lt;a&gt;</code>) naar: Home, Over mij, Contact.",
+        hint: '<nav>\n  <strong>Mijn Site</strong>\n  <a href="#">Home</a>\n  <a href="#">Over mij</a>\n  <a href="#">Contact</a>\n</nav>',
+        check: v => v.includes("<nav>") && v.includes("<a") && (v.match(/<a/g)||[]).length >= 3,
+        xp: 40
+      },
+      {
+        title: "Hero sectie bouwen",
+        type: "code",
+        instruction: "Maak een <code>&lt;header&gt;</code> met een <code>&lt;h1&gt;</code> met jouw naam, en een <code>&lt;p&gt;</code> met een korte beschrijving van jezelf.",
+        hint: "<header>\n  <h1>Jouw Naam</h1>\n  <p>Ik leer coderen en bouw mijn eerste website!</p>\n</header>",
+        check: v => v.includes("<header>") && v.includes("<h1>") && v.includes("<p>"),
+        xp: 35
+      },
+      {
+        title: "Stijl je site",
+        type: "code",
+        instruction: "Voeg CSS toe die de <code>nav</code> een achtergrondkleur geeft, en de <code>h1</code> een mooie kleur en grootte.",
+        hint: "<style>\n  nav {\n    background-color: #1a1a2e;\n    color: white;\n    padding: 20px;\n  }\n  h1 {\n    color: #e94560;\n    font-size: 48px;\n  }\n</style>",
+        check: v => v.toLowerCase().includes("<style") && v.includes("nav") && v.includes("background") && v.includes("h1"),
+        xp: 40
+      },
+      {
+        title: "Gefeliciteerd!",
+        type: "quiz",
+        question: "Je hebt je eigen website gebouwd! Wat heb je allemaal gebruikt?",
+        options: ["Alleen HTML", "HTML + CSS", "HTML + CSS + kennis over structuur", "Ik weet het niet"],
+        correct: 2,
+        xp: 50
       }
     ]
   }
 ];
 
-let currentLesson = 0;
-let currentStep = 0;
-let xp = 0;
-let completedLessons = new Set();
-let completedSteps = {};
+const achievements = [
+  { id: "first_code", icon: "✍️", label: "Eerste code geschreven", condition: s => s.totalXP >= 15 },
+  { id: "chapter1", icon: "📗", label: "Hoofdstuk 1 klaar", condition: s => s.completedChapters.includes(0) },
+  { id: "chapter3", icon: "📘", label: "3 hoofdstukken klaar", condition: s => s.completedChapters.length >= 3 },
+  { id: "xp100", icon: "⚡", label: "100 XP bereikt", condition: s => s.totalXP >= 100 },
+  { id: "xp300", icon: "🔥", label: "300 XP bereikt", condition: s => s.totalXP >= 300 },
+  { id: "all_done", icon: "🏆", label: "Alles afgerond!", condition: s => s.completedChapters.length >= chapters.length },
+  { id: "sandbox", icon: "🧪", label: "Speeltuin gebruikt", condition: s => s.usedSandbox },
+  { id: "portfolio", icon: "🌐", label: "Portfolio bekeken", condition: s => s.viewedPortfolio },
+];
 
-function updateXP() {
-  document.getElementById('xp-display').textContent = `⚡ ${xp} XP`;
-  document.getElementById('xp-sidebar').textContent = xp;
+// ==================== STATE ====================
+let state = {
+  totalXP: 0,
+  completedChapters: [],
+  chapterProgress: {},
+  currentChapter: 0,
+  currentStep: 0,
+  usedSandbox: false,
+  viewedPortfolio: false,
+  portfolio: {
+    naam: "Jouw Naam",
+    beschrijving: "Ik leer coderen!",
+    kleur: "#e94560",
+    achtergrond: "#1a1a2e"
+  }
+};
+
+function saveState() {
+  try { localStorage.setItem('codeleer_state', JSON.stringify(state)); } catch(e) {}
+}
+function loadState() {
+  try {
+    const s = localStorage.getItem('codeleer_state');
+    if (s) state = {...state, ...JSON.parse(s)};
+  } catch(e) {}
 }
 
-function showToast(amount) {
-  const toast = document.getElementById('xp-toast');
-  document.getElementById('toast-text').textContent = `+${amount} XP verdiend!`;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+// ==================== NAVIGATION ====================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+
+  if (name === 'home') renderHome();
+  if (name === 'sandbox') { state.usedSandbox = true; saveState(); loadTemplate('hello'); }
+  if (name === 'portfolio') { state.viewedPortfolio = true; saveState(); renderPortfolio(); }
 }
 
-function updateSidebar() {
-  document.querySelectorAll('.lesson-item').forEach((el, i) => {
-    el.classList.remove('active', 'done');
-    if (i === currentLesson) el.classList.add('active');
-    else if (completedLessons.has(i)) el.classList.add('done');
-    el.querySelector('.lesson-icon').textContent = completedLessons.has(i) ? '✓' : (i + 1);
-  });
-  document.getElementById('done-count').textContent = completedLessons.size;
-  const pct = Math.round(((currentLesson) / lessons.length) * 100 + 16);
-  document.getElementById('progress-fill').style.width = Math.min(pct, 100) + '%';
-  document.getElementById('progress-label').textContent = `Les ${currentLesson + 1} van ${lessons.length}`;
+// ==================== HOME ====================
+function renderHome() {
+  const grid = document.getElementById('chapter-grid');
+  grid.innerHTML = chapters.map((ch, i) => {
+    const done = state.completedChapters.includes(i);
+    const prog = state.chapterProgress[i] || 0;
+    const pct = Math.round((prog / ch.lessons.length) * 100);
+    const locked = i > 0 && !state.completedChapters.includes(i-1) && !state.chapterProgress[i];
+    const badgeCls = ch.badge === 'easy' ? 'badge-easy' : ch.badge === 'medium' ? 'badge-medium' : 'badge-hard';
+    return `<div class="chapter-card ${done?'completed':''} ${locked?'locked':''}" onclick="${locked?'showLockedMsg()':'openChapter('+i+')'}">
+      ${locked ? '<div class="lock-icon">🔒</div>' : ''}
+      <div class="chapter-num">Hoofdstuk ${i+1}</div>
+      <div class="chapter-title">${ch.title}</div>
+      <div class="chapter-desc">${ch.desc}</div>
+      <div class="chapter-meta">
+        <span class="chapter-badge ${badgeCls}">${ch.badgeText}</span>
+        <span>${ch.lessons.length} stappen</span>
+        ${done ? '<span style="color:var(--green)">✓ Klaar</span>' : (prog>0?`<span>${pct}%</span>`:'')}
+      </div>
+      <div class="chapter-progress"><div class="chapter-progress-fill" style="width:${done?100:pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const strip = document.getElementById('achievements-strip');
+  strip.innerHTML = achievements.map(a => {
+    const unlocked = a.condition(state);
+    return `<div class="achievement ${unlocked?'unlocked':''}">${a.icon} ${a.label}</div>`;
+  }).join('');
+}
+
+function showLockedMsg() {
+  showToast("🔒 Rond eerst het vorige hoofdstuk af!", 2500);
+}
+
+// ==================== LESSON ====================
+function openChapter(idx) {
+  state.currentChapter = idx;
+  state.currentStep = state.chapterProgress[idx] || 0;
+  showPage('lessons');
+  renderLesson();
 }
 
 function renderLesson() {
-  const lesson = lessons[currentLesson];
-  const step = lesson.steps[currentStep];
-  const main = document.getElementById('main-content');
+  const ch = chapters[state.currentChapter];
+  const stepIdx = state.currentStep;
+  const step = ch.lessons[stepIdx];
+  if (!step) { showChapterComplete(); return; }
 
-  let stepsHTML = '';
-  lesson.steps.forEach((_, i) => {
-    const cls = i < currentStep ? 'done' : (i === currentStep ? 'active' : '');
-    stepsHTML += `<div class="step-dot ${cls}" onclick="goToStep(${i})"></div>`;
-  });
+  document.getElementById('ls-chapter-title').textContent = `Hoofdstuk ${state.currentChapter+1}`;
+  document.getElementById('ls-step-count').textContent = `${stepIdx+1}/${ch.lessons.length}`;
+  document.getElementById('ls-xp').textContent = state.totalXP;
 
-  let stepContent = '';
+  // Sidebar step list
+  document.getElementById('step-list').innerHTML = ch.lessons.map((l, i) => {
+    const done = i < stepIdx || state.chapterProgress[state.currentChapter] > i;
+    const active = i === stepIdx;
+    return `<li class="step-item ${active?'active':''} ${done?'done':''}" onclick="goToStep(${i})">
+      <div class="step-dot2">${done?'✓':(i+1)}</div>${l.title}
+    </li>`;
+  }).join('');
+
+  // Step dots
+  const dots = ch.lessons.map((_, i) => {
+    const done = i < stepIdx;
+    const active = i === stepIdx;
+    return `<div class="sdot ${active?'active':''} ${done?'done':''}" onclick="goToStep(${i})"></div>`;
+  }).join('');
+
+  // Skills unlock
+  const skillsHTML = `<div class="skill-unlock"><h4>✨ Wat je leert in dit hoofdstuk</h4><div class="skill-tags">${ch.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div></div>`;
+
+  let content = '';
   if (step.type === 'theory') {
-    stepContent = `
-      <div class="theory-card">
-        <h3>📖 Uitleg</h3>
-        <div class="theory-text">${step.content.replace(/\n/g, '<br>')}</div>
-      </div>
-      <div class="code-example">${step.example}</div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="nextStep()">Begrepen, verder →</button>
-      </div>`;
+    content = `
+      ${stepIdx === 0 ? skillsHTML : ''}
+      <div class="theory-card"><h3>📖 Uitleg</h3><div class="theory-text">${step.content.replace(/\n/g,'<br>')}</div></div>
+      <div class="code-block">${step.example}</div>
+      <div class="btn-row"><button class="btn btn-p" onclick="nextStep()">Begrepen, verder →</button></div>`;
   } else if (step.type === 'code') {
-    const savedCode = (completedSteps[`${currentLesson}-${currentStep}`] || '');
-    stepContent = `
-      <div class="theory-card">
-        <h3>✍️ Jouw beurt — schrijf de code</h3>
-        <div class="theory-text">${step.instruction}</div>
+    content = `
+      <div class="theory-card"><h3>✍️ Jouw beurt</h3><div class="theory-text">${step.instruction}</div></div>
+      <div class="editor-wrap">
+        <div class="editor-top"><span style="font-family:var(--mono);font-size:12px;color:var(--text2)">editor.html</span><button class="hint-btn" onclick="showHint()">💡 Hint tonen</button></div>
+        <textarea class="code-editor" id="code-input" spellcheck="false" placeholder="Schrijf hier je code..."></textarea>
       </div>
-      <div class="editor-section">
-        <div class="editor-label">
-          <span>code-editor.html</span>
-          <button class="editor-hint" onclick="showHint(${currentLesson}, ${currentStep})">💡 Hint tonen</button>
-        </div>
-        <textarea class="code-editor" id="code-input" placeholder="Schrijf hier je HTML code..." spellcheck="false">${savedCode}</textarea>
-      </div>
-      <div id="preview-section" class="preview-section" style="display:none">
-        <div class="editor-label"><span>👁 Live preview</span></div>
-        <div class="preview-frame" id="preview-frame"></div>
-      </div>
+      <div class="preview-wrap" id="preview-wrap"><div class="preview-label">👁 Preview</div><div class="preview-frame" id="preview-frame"></div></div>
       <div id="feedback" class="feedback"></div>
       <div class="btn-row">
-        <button class="btn btn-primary" onclick="checkCode(${currentLesson}, ${currentStep})">✓ Controleer mijn code</button>
-        <button class="btn btn-secondary" onclick="previewCode()">👁 Preview</button>
-        <button class="btn btn-secondary" onclick="clearCode()">🗑 Wis</button>
+        <button class="btn btn-p" onclick="checkCode()">✓ Controleer</button>
+        <button class="btn btn-s" onclick="previewCode()">👁 Preview</button>
+        <button class="btn btn-s" onclick="document.getElementById('code-input').value=''">🗑 Wis</button>
       </div>`;
   } else if (step.type === 'quiz') {
-    let optionsHTML = step.options.map((opt, i) =>
-      `<button class="quiz-option" id="opt-${i}" onclick="checkQuiz(${currentLesson}, ${currentStep}, ${i})">${opt}</button>`
-    ).join('');
-    stepContent = `
-      <div class="theory-card">
-        <h3>🧠 Snelle vraag</h3>
+    content = `
+      <div class="theory-card"><h3>🧠 Snelle vraag</h3>
         <div class="theory-text">${step.question}</div>
-        <div class="quiz-options">${optionsHTML}</div>
+        <div class="quiz-opts">${step.options.map((o,i)=>`<button class="quiz-opt" id="qopt-${i}" onclick="checkQuiz(${i})">${o}</button>`).join('')}</div>
       </div>
       <div id="feedback" class="feedback"></div>`;
   }
 
-  main.innerHTML = `
-    <div class="lesson-header">
-      <div class="lesson-tag">${lesson.tag}</div>
-      <div class="lesson-title">${lesson.title}</div>
-      <div class="lesson-desc">${lesson.desc}</div>
-    </div>
-    <div class="step-indicator">${stepsHTML}</div>
-    ${stepContent}
-  `;
-
-  updateSidebar();
-}
-
-function nextStep() {
-  const lesson = lessons[currentLesson];
-  if (currentStep < lesson.steps.length - 1) {
-    currentStep++;
-    renderLesson();
-  } else {
-    completedLessons.add(currentLesson);
-    if (currentLesson < lessons.length - 1) {
-      currentLesson++;
-      currentStep = 0;
-      renderLesson();
-    } else {
-      document.getElementById('main-content').innerHTML = `
-        <div style="text-align:center; padding: 4rem 2rem; font-family: var(--mono);">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
-          <div style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">Gefeliciteerd!</div>
-          <div style="color: var(--text2); margin-bottom: 2rem;">Je hebt alle lessen afgerond!<br>Je hebt ${xp} XP verdiend.</div>
-          <div style="color: var(--green); font-size: 14px;">Je kent nu HTML, CSS en JavaScript basics.<br>De volgende stap: bouw je eigen pagina! 🚀</div>
-        </div>`;
-      updateSidebar();
-    }
-  }
+  document.getElementById('lesson-main').innerHTML = `
+    <div class="lesson-tag">Hoofdstuk ${state.currentChapter+1} · Stap ${stepIdx+1}</div>
+    <div class="lesson-title-big">${step.title}</div>
+    <div class="lesson-desc-sm">${ch.desc}</div>
+    <div class="step-dots">${dots}</div>
+    ${content}`;
 }
 
 function goToStep(i) {
-  if (i <= currentStep || completedSteps[`${currentLesson}-${i}`] !== undefined) {
-    currentStep = i;
+  const maxDone = state.chapterProgress[state.currentChapter] || 0;
+  if (i <= maxDone) { state.currentStep = i; renderLesson(); }
+}
+
+function nextStep() {
+  const ch = chapters[state.currentChapter];
+  const next = state.currentStep + 1;
+  if (next > (state.chapterProgress[state.currentChapter] || 0)) {
+    state.chapterProgress[state.currentChapter] = next;
+  }
+  if (next >= ch.lessons.length) {
+    if (!state.completedChapters.includes(state.currentChapter)) {
+      state.completedChapters.push(state.currentChapter);
+    }
+    saveState();
+    showChapterComplete();
+  } else {
+    state.currentStep = next;
+    saveState();
     renderLesson();
   }
 }
 
-function checkCode(li, si) {
+function showChapterComplete() {
+  const ch = chapters[state.currentChapter];
+  document.getElementById('lesson-main').innerHTML = `
+    <div class="complete-banner">
+      <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
+      <h2>Hoofdstuk ${state.currentChapter+1} klaar!</h2>
+      <p>"${ch.title}" succesvol afgerond. Je hebt ${ch.skills.join(', ')} geleerd.</p>
+      <div class="btn-row" style="justify-content:center">
+        ${state.currentChapter < chapters.length-1 ? `<button class="btn btn-p" onclick="openChapter(${state.currentChapter+1})">Volgend hoofdstuk →</button>` : ''}
+        <button class="btn btn-s" onclick="showPage('home')">← Terug naar overzicht</button>
+        <button class="btn btn-g" onclick="showPage('portfolio')">🌐 Bekijk mijn site</button>
+      </div>
+    </div>`;
+}
+
+function checkCode() {
   const val = document.getElementById('code-input').value.trim();
-  const step = lessons[li].steps[si];
+  const step = chapters[state.currentChapter].lessons[state.currentStep];
   const fb = document.getElementById('feedback');
-
-  if (!val) {
-    fb.className = 'feedback error';
-    fb.textContent = '❌ Schrijf eerst wat code!';
-    return;
-  }
-
-  completedSteps[`${li}-${si}`] = val;
-
+  if (!val) { fb.className='feedback err'; fb.textContent='❌ Schrijf eerst wat code!'; return; }
   if (step.check(val)) {
-    fb.className = 'feedback success';
-    fb.textContent = '✅ Goed gedaan! Je code is correct!';
-    if (!completedSteps[`${li}-${si}-scored`]) {
-      completedSteps[`${li}-${si}-scored`] = true;
-      xp += step.xp;
-      updateXP();
-      showToast(step.xp);
-    }
-    setTimeout(() => nextStep(), 1500);
+    fb.className='feedback ok'; fb.textContent='✅ Goed gedaan! Je code klopt!';
+    addXP(step.xp);
+    setTimeout(nextStep, 1400);
   } else {
-    fb.className = 'feedback error';
-    fb.innerHTML = '❌ Nog niet helemaal goed. Kijk nog eens naar de uitleg en probeer opnieuw.<br><br>Tip: gebruik de 💡 hint knop als je vastzit!';
+    fb.className='feedback err';
+    fb.innerHTML='❌ Nog niet helemaal. Kijk nog eens naar de uitleg hierboven.<br>Gebruik de 💡 hint als je vastzit!';
   }
 }
 
-function showHint(li, si) {
-  const step = lessons[li].steps[si];
+function showHint() {
+  const step = chapters[state.currentChapter].lessons[state.currentStep];
   const fb = document.getElementById('feedback');
-  fb.className = 'feedback hint';
-  fb.innerHTML = `💡 Voorbeeld oplossing:<br><pre style="margin-top:0.5rem; white-space:pre-wrap; font-size:12px;">${step.hint.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+  fb.className='feedback hint';
+  fb.innerHTML=`💡 Voorbeeld:<br><pre style="margin-top:6px;white-space:pre-wrap;font-size:12px">${step.hint.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
 }
 
 function previewCode() {
   const val = document.getElementById('code-input').value;
-  const section = document.getElementById('preview-section');
-  const frame = document.getElementById('preview-frame');
-  section.style.display = 'block';
-  frame.innerHTML = val;
+  const wrap = document.getElementById('preview-wrap');
+  document.getElementById('preview-frame').innerHTML = val;
+  wrap.style.display = 'block';
 }
 
-function clearCode() {
-  document.getElementById('code-input').value = '';
-  const section = document.getElementById('preview-section');
-  if (section) section.style.display = 'none';
-}
-
-function checkQuiz(li, si, chosen) {
-  const step = lessons[li].steps[si];
+function checkQuiz(chosen) {
+  const step = chapters[state.currentChapter].lessons[state.currentStep];
   const fb = document.getElementById('feedback');
-  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
-
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
   if (chosen === step.correct) {
-    document.getElementById(`opt-${chosen}`).classList.add('correct');
-    fb.className = 'feedback success';
-    fb.textContent = '✅ Correct! Goed gedaan!';
-    if (!completedSteps[`${li}-${si}-scored`]) {
-      completedSteps[`${li}-${si}-scored`] = true;
-      xp += step.xp;
-      updateXP();
-      showToast(step.xp);
-    }
-    setTimeout(() => nextStep(), 1500);
+    document.getElementById('qopt-'+chosen).classList.add('correct');
+    fb.className='feedback ok'; fb.textContent='✅ Correct!';
+    addXP(step.xp);
+    setTimeout(nextStep, 1300);
   } else {
-    document.getElementById(`opt-${chosen}`).classList.add('wrong');
-    document.getElementById(`opt-${step.correct}`).classList.add('correct');
-    fb.className = 'feedback error';
-    fb.textContent = `❌ Niet helemaal. Het juiste antwoord was: "${step.options[step.correct]}"`;
-    setTimeout(() => nextStep(), 2500);
+    document.getElementById('qopt-'+chosen).classList.add('wrong');
+    document.getElementById('qopt-'+step.correct).classList.add('correct');
+    fb.className='feedback err'; fb.textContent=`❌ Niet helemaal. Het juiste antwoord was: "${step.options[step.correct]}"`;
+    setTimeout(nextStep, 2200);
   }
 }
 
-// Sidebar navigation
-document.getElementById('lesson-list').addEventListener('click', (e) => {
-  const item = e.target.closest('.lesson-item');
-  if (!item) return;
-  const idx = parseInt(item.dataset.lesson);
-  if (idx <= currentLesson || completedLessons.has(idx)) {
-    currentLesson = idx;
-    currentStep = 0;
-    renderLesson();
-  }
-});
+// ==================== XP ====================
+function addXP(amount) {
+  state.totalXP += amount;
+  document.getElementById('xp-display').textContent = `⚡ ${state.totalXP} XP`;
+  document.getElementById('ls-xp').textContent = state.totalXP;
+  showToast(`+${amount} XP verdiend! ⚡`);
+  saveState();
+}
 
-// PWA manifest
-const manifest = {
-  name: "CodeLeer",
-  short_name: "CodeLeer",
-  description: "Leer zelf coderen stap voor stap",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#0f0f1a",
-  theme_color: "#1a1a2e",
-  icons: []
+function showToast(msg, duration=2200) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ==================== SANDBOX ====================
+const templates = {
+  leeg: { html: '', css: '', js: '' },
+  hello: { html: '<h1>Hallo wereld!</h1>\n<p>Mijn eerste HTML pagina.</p>', css: 'h1 { color: #e94560; }\np { font-size: 18px; }', js: '' },
+  knop: { html: '<h2>Klik op de knop!</h2>\n<button onclick="klik()">Klik mij!</button>\n<p id="result"></p>', css: 'button { padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }', js: 'function klik() {\n  document.getElementById("result").innerHTML = "Je klikte! 🎉";\n}' },
+  lijst: { html: '<h2>Mijn favoriete dingen</h2>\n<ol>\n  <li>Muziek</li>\n  <li>Gamen</li>\n  <li>Coderen</li>\n</ol>', css: 'body { font-family: Arial; padding: 20px; }\nli { padding: 5px 0; }', js: '' },
+  kleuren: { html: '<div class="box box1">Rood</div>\n<div class="box box2">Groen</div>\n<div class="box box3">Blauw</div>', css: '.box { padding: 20px; margin: 10px; color: white; border-radius: 8px; font-family: Arial; font-size: 18px; }\n.box1 { background: #e94560; }\n.box2 { background: #00d4aa; }\n.box3 { background: #4ea8ff; }', js: '' },
+  formulier: { html: '<h2>Contactformulier</h2>\n<label>Naam:</label><br>\n<input type="text" id="naam" placeholder="Jouw naam"><br><br>\n<label>Bericht:</label><br>\n<textarea id="bericht" rows="4" placeholder="Jouw bericht"></textarea><br><br>\n<button onclick="verstuur()">Verstuur</button>\n<p id="msg"></p>', css: 'body { font-family: Arial; padding: 20px; }\ninput, textarea { width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 4px; }\nbutton { padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 4px; cursor: pointer; }', js: 'function verstuur() {\n  let naam = document.getElementById("naam").value;\n  if (naam) {\n    document.getElementById("msg").textContent = "Bedankt, " + naam + "!";\n  } else {\n    document.getElementById("msg").textContent = "Vul je naam in!";\n  }\n}' },
+  flex: { html: '<div class="container">\n  <div class="item">Item 1</div>\n  <div class="item">Item 2</div>\n  <div class="item">Item 3</div>\n</div>', css: '.container {\n  display: flex;\n  justify-content: space-between;\n  gap: 16px;\n  padding: 20px;\n}\n.item {\n  background: #e94560;\n  color: white;\n  padding: 20px;\n  border-radius: 8px;\n  flex: 1;\n  text-align: center;\n  font-family: Arial;\n}', js: '' },
+  kaart: { html: '<div class="kaart">\n  <h2>👋 Over mij</h2>\n  <p>Hallo! Ik heet <strong>Jij</strong> en ik leer coderen.</p>\n  <a href="#">Meer lezen →</a>\n</div>', css: '.kaart {\n  max-width: 300px;\n  background: white;\n  border: 1px solid #ddd;\n  border-radius: 12px;\n  padding: 24px;\n  font-family: Arial;\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\n}\nh2 { color: #e94560; margin-bottom: 8px; }\na { color: #4ea8ff; }', js: '' }
 };
-const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
-document.getElementById('manifest-link').href = URL.createObjectURL(blob);
 
-// Init
-renderLesson();
+let activeSandboxTab = 'html';
+function switchSandboxTab(tab) {
+  activeSandboxTab = tab;
+  document.querySelectorAll('.stab').forEach((t,i) => t.classList.toggle('active', ['html','css','js'][i]===tab));
+  document.querySelectorAll('.sandbox-textarea').forEach(t => t.classList.remove('active'));
+  document.getElementById('sandbox-'+tab).classList.add('active');
+}
+
+function loadTemplate(name) {
+  const t = templates[name];
+  document.getElementById('sandbox-html').value = t.html;
+  document.getElementById('sandbox-css').value = t.css;
+  document.getElementById('sandbox-js').value = t.js;
+  runSandbox();
+}
+
+function runSandbox() {
+  const html = document.getElementById('sandbox-html').value;
+  const css = document.getElementById('sandbox-css').value;
+  const js = document.getElementById('sandbox-js').value;
+  const iframe = document.getElementById('sandbox-iframe');
+  const doc = `<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
+  iframe.srcdoc = doc;
+  document.getElementById('sandbox-hint-text').textContent = 'Preview bijgewerkt!';
+  setTimeout(() => { document.getElementById('sandbox-hint-text').textContent = 'Klik Run om te zien wat je gemaakt hebt!'; }, 2000);
+}
+
+// ==================== PORTFOLIO ====================
+function renderPortfolio() {
+  const unlocked = state.completedChapters.length;
+  const s = state.portfolio;
+
+  const sections = [
+    { title: "📝 Jouw naam", desc: "Je naam die op je site staat.", field: "naam", placeholder: "Jouw naam", unlocked: true },
+    { title: "💬 Beschrijving", desc: "Een korte tekst over jezelf.", field: "beschrijving", placeholder: "Ik leer coderen!", unlocked: true },
+    { title: "🎨 Accentkleur", desc: "De hoofdkleur van je site. Hoofdstuk 5 nodig.", field: "kleur", placeholder: "#e94560", unlocked: unlocked >= 5 },
+    { title: "🌑 Achtergrond", desc: "De achtergrondkleur. Hoofdstuk 5 nodig.", field: "achtergrond", placeholder: "#1a1a2e", unlocked: unlocked >= 5 },
+  ];
+
+  document.getElementById('portfolio-sections').innerHTML = sections.map(sec => `
+    <div class="portfolio-section-card ${sec.unlocked?'':'locked'}">
+      <h3>${sec.title}</h3>
+      <p>${sec.desc}</p>
+      ${sec.unlocked ? `<textarea class="mini-editor" id="pf-${sec.field}" placeholder="${sec.placeholder}">${s[sec.field]||''}</textarea>` : ''}
+    </div>`).join('');
+
+  updatePortfolio();
+}
+
+function updatePortfolio() {
+  ['naam','beschrijving','kleur','achtergrond'].forEach(f => {
+    const el = document.getElementById('pf-'+f);
+    if (el) state.portfolio[f] = el.value;
+  });
+  saveState();
+  const s = state.portfolio;
+  const html = `<!DOCTYPE html><html><head><style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: ${s.achtergrond||'#1a1a2e'}; color: #fff; font-family: Arial, sans-serif; }
+    nav { background: rgba(255,255,255,0.05); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    nav strong { font-size: 20px; color: ${s.kleur||'#e94560'}; }
+    nav a { color: rgba(255,255,255,0.7); text-decoration: none; margin-left: 20px; font-size: 14px; }
+    header { padding: 80px 32px; text-align: center; }
+    header h1 { font-size: 48px; color: ${s.kleur||'#e94560'}; margin-bottom: 16px; }
+    header p { color: rgba(255,255,255,0.7); font-size: 18px; }
+    main { padding: 48px 32px; max-width: 700px; margin: 0 auto; }
+    section { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.08); }
+    section h2 { color: ${s.kleur||'#e94560'}; margin-bottom: 12px; }
+    ul { padding-left: 20px; line-height: 2; color: rgba(255,255,255,0.8); }
+    footer { text-align: center; padding: 24px; color: rgba(255,255,255,0.3); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.06); }
+  </style></head><body>
+    <nav><strong>${s.naam||'Mijn Site'}</strong><div><a href="#">Home</a><a href="#">Over mij</a><a href="#">Contact</a></div></nav>
+    <header><h1>Hallo, ik ben ${s.naam||'Jij'}! 👋</h1><p>${s.beschrijving||'Ik leer coderen!'}</p></header>
+    <main>
+      <section><h2>Over mij</h2><p style="color:rgba(255,255,255,0.8);line-height:1.8">${s.beschrijving||'Ik leer coderen en dit is mijn eerste website!'}</p></section>
+      <section><h2>Wat ik kan</h2><ul>
+        ${state.completedChapters.map(i => `<li>${chapters[i].skills[0]}</li>`).join('') || '<li>Nog aan het leren...</li>'}
+      </ul></section>
+    </main>
+    <footer>Gemaakt door ${s.naam||'mij'} · met CodeLeer</footer>
+  </body></html>`;
+  document.getElementById('portfolio-frame').srcdoc = html;
+}
+
+function downloadSite() {
+  updatePortfolio();
+  const s = state.portfolio;
+  const html = document.getElementById('portfolio-frame').srcdoc;
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mijn-site.html';
+  a.click();
+  showToast('⬇ Je site is gedownload!');
+}
+
+// ==================== INIT ====================
+loadState();
+document.getElementById('xp-display').textContent = `⚡ ${state.totalXP} XP`;
+renderHome();
 </script>
 </body>
 </html>
